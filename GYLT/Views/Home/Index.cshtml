@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+
+<ul>
+	<li>@Html.ActionLink("Weight Loss", "Index", "WeightLoss")</li>
+	@*<li>@Html.ActionLink("About", "About", "Home")</li>
+		<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+</ul>
+
+<p>
+	<input type="date" id="datepicker" />
+</p>
+
+@*<link rel="stylesheet" src="~/Content/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="~/Scripts/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.12.1.js"></script>*@
+
+<script type="text/javascript">
+	$(function () {
+		$('#datepicker').datepicker();
+	});
+</script>

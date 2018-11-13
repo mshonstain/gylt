@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GYLTModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="DateCreated" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetimeoffset" Precision="7" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="36" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="36" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="36" Nullable="false" />
+          <Property Name="DateOfBirth" Type="date" />
+          <Property Name="Gender" Type="char" MaxLength="1" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="128" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="16" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IconName" Type="nvarchar" MaxLength="36" />
+        </EntityType>
+        <EntityType Name="WeightEntry">
+          <Key>
+            <PropertyRef Name="WeightEntryID" />
+          </Key>
+          <Property Name="WeightEntryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateCreated" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetimeoffset" Precision="7" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="WeightLossAttemptID" Type="int" Nullable="false" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="1024" />
+        </EntityType>
+        <EntityType Name="WeightLossAttempt">
+          <Key>
+            <PropertyRef Name="WeightLossAttemptID" />
+          </Key>
+          <Property Name="WeightLossAttemptID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="DateCreated" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetimeoffset" Precision="7" />
+          <Property Name="Name" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="StartingWeight" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="TargetDate" Type="date" />
+          <Property Name="TargetWeight" Type="decimal" Precision="5" Scale="1" />
+          <Property Name="Goal" Type="nvarchar" MaxLength="128" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WeightLossMilestone">
+          <Key>
+            <PropertyRef Name="WeightLossMilestoneID" />
+          </Key>
+          <Property Name="WeightLossMilestoneID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateCreated" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetimeoffset" Precision="7" />
+          <Property Name="TargetDate" Type="date" />
+          <Property Name="TargetWeight" Type="decimal" Precision="5" Scale="1" />
+          <Property Name="Goal" Type="nvarchar" MaxLength="128" />
+          <Property Name="DateAchieved" Type="date" />
+          <Property Name="WeightLossAttemptID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_WeightEntry_WeightLossAttempt">
+          <End Role="WeightLossAttempt" Type="Self.WeightLossAttempt" Multiplicity="1" />
+          <End Role="WeightEntry" Type="Self.WeightEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeightLossAttempt">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Principal>
+            <Dependent Role="WeightEntry">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeightLossAttempt_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="WeightLossAttempt" Type="Self.WeightLossAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="WeightLossAttempt">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeightLossMilestone_WeightLossAttempt">
+          <End Role="WeightLossAttempt" Type="Self.WeightLossAttempt" Multiplicity="1" />
+          <End Role="WeightLossMilestone" Type="Self.WeightLossMilestone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeightLossAttempt">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Principal>
+            <Dependent Role="WeightLossMilestone">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GYLTModelStoreContainer">
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WeightEntry" EntityType="Self.WeightEntry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WeightLossAttempt" EntityType="Self.WeightLossAttempt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WeightLossMilestone" EntityType="Self.WeightLossMilestone" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_WeightEntry_WeightLossAttempt" Association="Self.FK_WeightEntry_WeightLossAttempt">
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempt" />
+            <End Role="WeightEntry" EntitySet="WeightEntry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeightLossAttempt_User" Association="Self.FK_WeightLossAttempt_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeightLossMilestone_WeightLossAttempt" Association="Self.FK_WeightLossMilestone_WeightLossAttempt">
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempt" />
+            <End Role="WeightLossMilestone" EntitySet="WeightLossMilestone" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GYLTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="WeightEntry">
+          <Key>
+            <PropertyRef Name="WeightEntryID" />
+          </Key>
+          <Property Name="WeightEntryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTimeOffset" Precision="7" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Weight" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="WeightLossAttemptID" Type="Int32" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WeightLossAttempt" Relationship="Self.FK_WeightEntry_WeightLossAttempt" FromRole="WeightEntry" ToRole="WeightLossAttempt" />
+        </EntityType>
+        <EntityType Name="WeightLossAttempt">
+          <Key>
+            <PropertyRef Name="WeightLossAttemptID" />
+          </Key>
+          <Property Name="WeightLossAttemptID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTimeOffset" Precision="7" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="StartingWeight" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="TargetDate" Type="DateTime" Precision="0" />
+          <Property Name="TargetWeight" Type="Decimal" Precision="5" Scale="1" />
+          <Property Name="Goal" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WeightEntries" Relationship="Self.FK_WeightEntry_WeightLossAttempt" FromRole="WeightLossAttempt" ToRole="WeightEntry" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="WeightLossMilestones" Relationship="GYLTModel.FK_WeightLossMilestone_WeightLossAttempt" FromRole="WeightLossAttempt" ToRole="WeightLossMilestone" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="GYLTModel.FK_WeightLossAttempt_User" FromRole="WeightLossAttempt" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_WeightEntry_WeightLossAttempt">
+          <End Role="WeightLossAttempt" Type="Self.WeightLossAttempt" Multiplicity="1" />
+          <End Role="WeightEntry" Type="Self.WeightEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeightLossAttempt">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Principal>
+            <Dependent Role="WeightEntry">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GYLTEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="WeightEntries" EntityType="Self.WeightEntry" />
+          <EntitySet Name="WeightLossAttempts" EntityType="Self.WeightLossAttempt" />
+          <AssociationSet Name="FK_WeightEntry_WeightLossAttempt" Association="Self.FK_WeightEntry_WeightLossAttempt">
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempts" />
+            <End Role="WeightEntry" EntitySet="WeightEntries" />
+          </AssociationSet>
+          <EntitySet Name="WeightLossMilestones" EntityType="GYLTModel.WeightLossMilestone" />
+          <AssociationSet Name="FK_WeightLossMilestone_WeightLossAttempt" Association="GYLTModel.FK_WeightLossMilestone_WeightLossAttempt">
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempts" />
+            <End Role="WeightLossMilestone" EntitySet="WeightLossMilestones" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="GYLTModel.User" />
+          <AssociationSet Name="FK_WeightLossAttempt_User" Association="GYLTModel.FK_WeightLossAttempt_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="WeightLossAttempt" EntitySet="WeightLossAttempts" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="WeightLossMilestone">
+          <Key>
+            <PropertyRef Name="WeightLossMilestoneID" />
+          </Key>
+          <Property Name="WeightLossMilestoneID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTimeOffset" Precision="7" />
+          <Property Name="TargetDate" Type="DateTime" Precision="0" />
+          <Property Name="TargetWeight" Type="Decimal" Precision="5" Scale="1" />
+          <Property Name="Goal" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DateAchieved" Type="DateTime" Precision="0" />
+          <Property Name="WeightLossAttemptID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="WeightLossAttempt" Relationship="GYLTModel.FK_WeightLossMilestone_WeightLossAttempt" FromRole="WeightLossMilestone" ToRole="WeightLossAttempt" />
+        </EntityType>
+        <Association Name="FK_WeightLossMilestone_WeightLossAttempt">
+          <End Type="GYLTModel.WeightLossAttempt" Role="WeightLossAttempt" Multiplicity="1" />
+          <End Type="GYLTModel.WeightLossMilestone" Role="WeightLossMilestone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeightLossAttempt">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Principal>
+            <Dependent Role="WeightLossMilestone">
+              <PropertyRef Name="WeightLossAttemptID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTimeOffset" Precision="7" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="0" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IconName" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WeightLossAttempts" Relationship="GYLTModel.FK_WeightLossAttempt_User" FromRole="User" ToRole="WeightLossAttempt" />
+        </EntityType>
+        <Association Name="FK_WeightLossAttempt_User">
+          <End Type="GYLTModel.User" Role="User" Multiplicity="1" />
+          <End Type="GYLTModel.WeightLossAttempt" Role="WeightLossAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="WeightLossAttempt">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GYLTModelStoreContainer" CdmEntityContainer="GYLTEntities">
+          <EntitySetMapping Name="WeightEntries">
+            <EntityTypeMapping TypeName="GYLTModel.WeightEntry">
+              <MappingFragment StoreEntitySet="WeightEntry">
+                <ScalarProperty Name="WeightEntryID" ColumnName="WeightEntryID" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="WeightLossAttemptID" ColumnName="WeightLossAttemptID" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeightLossAttempts">
+            <EntityTypeMapping TypeName="GYLTModel.WeightLossAttempt">
+              <MappingFragment StoreEntitySet="WeightLossAttempt">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="WeightLossAttemptID" ColumnName="WeightLossAttemptID" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="StartingWeight" ColumnName="StartingWeight" />
+                <ScalarProperty Name="TargetDate" ColumnName="TargetDate" />
+                <ScalarProperty Name="TargetWeight" ColumnName="TargetWeight" />
+                <ScalarProperty Name="Goal" ColumnName="Goal" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeightLossMilestones">
+            <EntityTypeMapping TypeName="GYLTModel.WeightLossMilestone">
+              <MappingFragment StoreEntitySet="WeightLossMilestone">
+                <ScalarProperty Name="WeightLossAttemptID" ColumnName="WeightLossAttemptID" />
+                <ScalarProperty Name="DateAchieved" ColumnName="DateAchieved" />
+                <ScalarProperty Name="Goal" ColumnName="Goal" />
+                <ScalarProperty Name="TargetWeight" ColumnName="TargetWeight" />
+                <ScalarProperty Name="TargetDate" ColumnName="TargetDate" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="WeightLossMilestoneID" ColumnName="WeightLossMilestoneID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="GYLTModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IconName" ColumnName="IconName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

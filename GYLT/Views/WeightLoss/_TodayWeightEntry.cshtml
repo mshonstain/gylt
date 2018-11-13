@@ -1,0 +1,19 @@
+﻿@model GYLT.Models.WeightEntryModel
+
+@using (Ajax.BeginForm("UpdateTodayWeightEntry", new AjaxOptions { UpdateTargetId = "todayEntryDiv" }))
+{
+	@Html.AntiForgeryToken()
+	@Html.TextBoxFor(model => model.Weight, new { @class = "giant-text one-decimal-place", @style = "text-align: center; padding: 0px; width: 100%;", @readonly = true })
+	<div id="notes-editor-div_today" style="display: none; margin-top: 4px; margin-bottom: 4px; width: 100%;">@Html.TextBoxFor(m => m.Notes, new { placeholder = "Notes", @class = "editable", @style="width: 100%;" })</div>
+	<div style="display: block; width: 100%; text-align: center;">
+		@Html.HiddenFor(m => m.Date)
+		<span>Today's Weight</span>
+		<span style="margin-right: 12px;">(@DateTime.Today.ToString("MMM dd"))</span>
+		<button id="edit_today" class="icon-button">
+			<img src="~/Content/Images/EditIcon_Gray.png" />
+		</button>
+		<button id="submit_today" type="submit" class="icon-button" style="display: none;">
+			<img src="~/Content/Images/SaveIcon_Gray.png" />
+		</button>
+	</div>
+}

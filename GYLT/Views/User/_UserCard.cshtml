@@ -1,0 +1,10 @@
+﻿@model GYLT.Models.UserModel
+
+@using (Html.BeginForm("SelectUser", "User"))
+{
+	<button class="icon-button" type="submit">
+		@Html.HiddenFor(m => Model.UserID)
+		<img src="@Model.IconPath" style="width: 35%;" />
+		<p>@Model.Username</p>
+	</button>
+}

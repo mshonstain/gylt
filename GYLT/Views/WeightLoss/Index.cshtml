@@ -1,0 +1,124 @@
+﻿@model GYLT.Models.WeightLossProfileModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<div style="display: block; width: 100%;">
+	<div style="display: inline-block;">
+		<h2>@Model.Name</h2>
+		<p>@Model.Description</p>
+		<p><b>My Goal: </b>@Model.Goal</p>
+	</div>
+	<div id="todayEntryDiv" style="padding: 12px; align-content: center; text-align: center;" class="gyltModule rightModule">
+		@Html.Partial("_TodayWeightEntry", Model.TodayWeightEntryModel)
+	</div>
+</div>
+<div id="recentWeightEntries" class="gyltModule leftModule" style="display: inline-block; margin-top: 8px; padding-top: 12px; padding-left: 12px; padding-right: 12px; padding-bottom: 8px;">
+	@Html.Partial("_RecentWeightEntries", Model.RecentWeightEntryModels)
+</div>
+<div id="chartDiv" class="chart-div">
+	<canvas id="RecentWeightHistory"></canvas>
+</div>
+<div style="display: inline-block; margin-top: 8px;">
+	<table>
+		<tr>
+			<td class="bold-label">Started</td>
+			<td>@Model.StartDate.ToString("MMM dd, yy")</td>
+		</tr>
+		<tr>
+			<td class="bold-label">Starting Weight</td>
+			<td>@Model.StartingWeight</td>
+		</tr>
+		@if (Model.TargetDate != null)
+		{
+			<tr>
+				<td class="bold-label">Target Date</td>
+				<td>@Model.TargetDate.Value.ToString("MMM dd, yy")</td>
+			</tr>
+		}
+		@if (Model.TargetWeight != null)
+		{
+			<tr>
+				<td class="bold-label">Target Weight</td>
+				<td>@Model.TargetWeight</td>
+			</tr>
+		}
+		@if (Model.SevenDayAverage != null)
+		{
+			<tr>
+				<td class="bold-label">Seven Day Average</td>
+				<td>@Model.SevenDayAverage.Value.ToString("N1")</td>
+			</tr>
+		}
+		<tr>
+			<td class="bold-label">Total Lost</td>
+			<td>@Model.TotalLost</td>
+		</tr>
+	</table>
+</div>
+
+<script>
+	$(document).ready(function () {
+		var ctx = $('#RecentWeightHistory');
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: @Html.Raw(Model.RecentWeightEntryLabels),
+				datasets: [{
+					label: 'Weight',
+					data: @Model.RecentWeightEntryValues,
+					//backgroundColor: '#cccccc',
+					fill: false,
+					borderColor: '#888888',
+					pointBackgroundColor: '#888888',
+					pointBorderColor: '#888888',
+					borderWidth: 3,
+					lineTension: 0
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: false
+						},
+						gridLines: {
+							display: false
+						}
+					}],
+					xAxes: [{
+						gridLines: {
+							display: false
+						}
+					}]
+				},
+				legend: {
+					display: false
+				}
+			}
+		});
+	});
+
+	$(document).on('click', '#edit_recent', function () {
+		$('#recentTable').find('input[type=text]').attr('readonly', false).addClass('editable');
+		$('#recentTable').find('.notes').attr('placeholder', 'Notes').attr('readonly', false).addClass('editable');
+		$('#edit_recent').hide();
+		$('#submit_recent').css('display', 'inline-block');
+		return false;
+	});
+
+	$(document).on('click', '#edit_today', function () {
+		$('#Weight').attr('readonly', false).addClass('editable');
+		$('#notes-editor-div_today').show();
+		$('#edit_today').hide();
+		$('#submit_today').css('display', 'inline-block');
+		return false;
+	});
+
+	$(document).on('focusout', '.one-decimal-place', function () {
+		this.value = parseFloat(this.value).toFixed(1);
+	});
+</script>

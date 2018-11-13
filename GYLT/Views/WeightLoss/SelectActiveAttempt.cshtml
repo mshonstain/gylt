@@ -1,0 +1,73 @@
+﻿@model IEnumerable<GYLTRepository.WeightLossAttempt>
+
+@{
+    ViewBag.Title = "SelectActiveAttempt";
+}
+
+<h2>SelectActiveAttempt</h2>
+
+<p>There appear to be multiple active weight loss attempts. Please select the current one.</p>
+
+<table class="table">
+    <tr>
+		<th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartingWeight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TargetDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TargetWeight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Goal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+    </tr>
+	
+@foreach (var item in Model) {
+    <tr>
+		<td>
+			<input type="button" value="Select" onclick="location.href='@Url.Action("UpdateActiveAttempt", "WeightLoss", new { id = item.WeightLossAttemptID })'" />
+			@*@Ajax.ActionLink("Select", "SelectActiveAttempt", new { id = item.WeightLossAttemptID }, new AjaxOptions {HttpMethod = "POST"})*@
+		</td>
+		<td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartingWeight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TargetDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TargetWeight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Goal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+    </tr>
+}
+
+</table>

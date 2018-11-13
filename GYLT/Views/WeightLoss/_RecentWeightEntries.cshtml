@@ -1,0 +1,39 @@
+﻿@model IList<GYLT.Models.WeightEntryModel>
+
+@using (Ajax.BeginForm("UpdateWeightEntries", new AjaxOptions { UpdateTargetId = "recentWeightEntries" }))
+{
+	@Html.AntiForgeryToken()
+	<table id="recentTable" style="width: 100%;">
+		<tr>
+			<td colspan="3" style="padding-bottom: 4px;">
+				<span class="moduleTitle">Recent Weight Entries</span>
+			</td>
+			<td width="16">
+				<button id="edit_recent" class="icon-button">
+					<img src="~/Content/Images/EditIcon_Gray.png" />
+				</button>
+				<button id="submit_recent" type="submit" class="icon-button" style="display: none;">
+					<img id="saveIcon_recent" src="~/Content/Images/SaveIcon_Gray.png" />
+				</button>
+			</td>
+		</tr>
+		@for (int i = 0; i < Model.Count; i++)
+		{
+			<tr style="border-bottom: 1px solid #ddddbb;">
+				<td style="text-align: center; width: 64px;">
+					@Html.HiddenFor(e => e[i].Date)
+					@Html.DisplayFor(e => e[i].Date)
+				</td>
+				<td>
+					@Html.TextBoxFor(e => e[i].Weight, new { @style = "text-align: right; width: 48px;", @readonly = true, @class = "one-decimal-place" })
+				</td>
+				<td colspan="2">
+					@Html.TextBoxFor(e => e[i].Notes, new { @readonly = true, @class = "notes" })
+				</td>
+			</tr>
+		}
+	</table>
+}
+<div style="width: 100%; text-align: right; padding-top: 8px;">
+	@Html.ActionLink("View All", "WeightEntries", null, new { @class = "gylt-link" })
+</div>

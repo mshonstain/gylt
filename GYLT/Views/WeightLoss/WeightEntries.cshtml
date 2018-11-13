@@ -1,0 +1,94 @@
+﻿@model GYLT.Models.WeightEntriesModel
+
+@{
+    ViewBag.Title = "WeightEntries";
+}
+
+<h2>WeightEntries</h2>
+
+<div id="weightEntriesDiv" class="chart-div">
+	<canvas id="WeightHistory"></canvas>
+</div>
+
+<p style="text-align: right;">
+	<button class="icon-button" id="edit_button">
+		<img src="~/Content/Images/EditIcon_Gray.png" />
+	</button>
+	<button class="icon-button" id="add_button" style="margin-left: 16px;">
+		<img src="~/Content/Images/AddIcon_Gray.png" />
+	</button>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WeightEntryModels.First().Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WeightEntryModels.First().Weight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WeightEntryModels.First().Notes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.WeightEntryModels) {
+    <tr>
+        <td>
+			@Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.TextBoxFor(modelItem => item.Weight, new { @readonly = true, @class = "can-be-edited", @style="width: 48px;" })
+        </td>
+        <td>
+            @Html.TextBoxFor(modelItem => item.Notes, new { @readonly = true, @class = "can-be-edited" })
+        </td>
+    </tr>
+}
+
+</table>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		var ctx = $('#WeightHistory');
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: @Html.Raw(Model.WeightEntryLabels),
+				datasets: [{
+					label: 'Weight',
+					data: @Model.WeightEntryValues,
+					fill: false,
+					borderColor: '#888888',
+					pointBackgroundColor: '#888888',
+					pointBorderColor: '#888888',
+					borderWidth: 3,
+					lineTension: 0
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: false
+						},
+						gridLines: {
+							display: false
+						}
+					}],
+					xAxes: [{
+						gridLines: {
+							display: false
+						}
+					}]
+				},
+				legend: {
+					display: false
+				}
+			}
+		});
+	});
+	$('#edit_button').click(function () {
+		$('.can-be-edited').attr('readonly', false).addClass('editable');
+	});
+</script>
